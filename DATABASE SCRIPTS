@@ -1,0 +1,113 @@
+DATABASE SCRIPTS
+
+CREATE TABLE `integrasbd`.`users` (
+  `user_id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(200) NOT NULL,
+  `username` VARCHAR(50) NULL,
+  `emoney_user_id` VARCHAR(100) NULL,
+  `emoney_owner_id` VARCHAR(100) NULL,
+  `emoney_owner_name` VARCHAR(45) NULL,
+  `names` VARCHAR(100) NULL,
+  `display_names` VARCHAR(100) NULL,
+  PRIMARY KEY (`user_id`));
+
+
+  CREATE TABLE `integrasbd`.`accounts` (
+  `id_account` INT NOT NULL AUTO_INCREMENT,
+  `name_account` VARCHAR(45) NOT NULL,
+  `id_type` INT NOT NULL,
+  `id_subtype` INT NOT NULL,
+  `input` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_account`));
+
+
+CREATE TABLE `integrasbd`.`types` (
+  `id_type` INT NOT NULL,
+  `name_type` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_type`));
+
+CREATE TABLE `integrasbd`.`subtypes` (
+  `id_subtype` INT NOT NULL,
+  `name_subtype` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_subtype`));
+
+CREATE TABLE `integrasbd`.`accounts_users` (
+  `id_accounts_users` INT NOT NULL,
+  `id_account` INT NOT NULL,
+  `id_user` INT NOT NULL,
+  PRIMARY KEY (`id_accounts_clients`));
+
+CREATE TABLE `integrasbd`.`users_allocation` (
+  `id_users_allocation` INT NOT NULL,
+  `id_account_user` INT NOT NULL,
+  `value` INT NOT NULL,
+  `year` VARCHAR(5) NOT NULL,
+  `age` VARCHAR(10) NOT NULL,
+  PRIMARY KEY (`id_users_allocation`));
+
+CREATE TABLE `integrasbd`.`strategies` (
+  `id_strategy` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `year_begin` INT NOT NULL,
+  `year_end` INT NOT NULL,
+  PRIMARY KEY (`id_strategy`));
+
+
+
+FK
+
+ALTER TABLE `integrasbd`.`accounts` 
+ADD INDEX `fk1_idx` (`id_type` ASC) VISIBLE,
+ADD INDEX `fk2_idx` (`id_subtype` ASC) VISIBLE;
+;
+ALTER TABLE `integrasbd`.`accounts` 
+ADD CONSTRAINT `fk1`
+  FOREIGN KEY (`id_type`)
+  REFERENCES `integrasbd`.`types` (`id_type`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk2`
+  FOREIGN KEY (`id_subtype`)
+  REFERENCES `integrasbd`.`subtypes` (`id_subtype`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+  ALTER TABLE `integrasbd`.`accounts_users` 
+ADD INDEX `fk3_idx` (`id_account` ASC) VISIBLE,
+ADD INDEX `fk4_idx` (`id_user` ASC) VISIBLE;
+;
+ALTER TABLE `integrasbd`.`accounts_users` 
+ADD CONSTRAINT `fk3`
+  FOREIGN KEY (`id_account`)
+  REFERENCES `integrasbd`.`accounts` (`id_account`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk4`
+  FOREIGN KEY (`id_user`)
+  REFERENCES `integrasbd`.`users` (`user_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+  ALTER TABLE `integrasbd`.`users_allocation` 
+ADD INDEX `fk5_idx` (`id_account_user` ASC) VISIBLE;
+;
+ALTER TABLE `integrasbd`.`users_allocation` 
+ADD CONSTRAINT `fk5`
+  FOREIGN KEY (`id_account_user`)
+  REFERENCES `integrasbd`.`accounts_users` (`id_accounts_users`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+ALTER TABLE `integrasbd`.`strategies` 
+ADD COLUMN `id_user` INT NOT NULL AFTER `year_end`,
+ADD INDEX `fk6_idx` (`id_user` ASC) VISIBLE;
+;
+ALTER TABLE `integrasbd`.`strategies` 
+ADD CONSTRAINT `fk6`
+  FOREIGN KEY (`id_user`)
+  REFERENCES `integrasbd`.`users` (`user_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
