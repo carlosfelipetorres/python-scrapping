@@ -27,7 +27,7 @@ def getClients(authCookie):
         r    = s.post(url, data = data, cookies = cookies)
         
         if r.status_code == 200:
-            users = json.loads(r.content.decode('utf-8'))
+            users = json.loads(r.content.json())
             dbconnection.insert_users_list(users)
         else: print('NOT LOGGED IN')
 
