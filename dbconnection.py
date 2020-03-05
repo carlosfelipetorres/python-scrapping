@@ -1,6 +1,6 @@
 import pymysql
 
-db = pymysql.connect("127.0.0.1","root","Cft901018@.","integrasbd" )
+db = pymysql.connect("127.0.0.1","root","password","integrasbd" )
 
 
 def insert_users_list(users_list):
